@@ -1,0 +1,17 @@
+== Installation
+
+1. clone repo and cd to it
+
+  git clone git://github.com/netoctone/tetris.git; cd tetris
+
+2. install bundler (if you haven't yet)
+
+  gem install bundler
+
+3. install dependency gems
+
+  bunlde install
+
+4. enjoy the game
+
+  bin/tetris
