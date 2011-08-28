@@ -13,7 +13,9 @@ module Tetris
 
     CAPTION = 'Tetris'
 
-    COLORS = [ :red, :green, :blue, :yellow ]
+    COLORS = [ :red, :green, :blue, :yellow, :cyan ]
+
+    MOVES_PER_STEP = 9.0
 
     include Shapes
 
@@ -42,6 +44,9 @@ module Tetris
 
       @step = 0.5
       @last_step_time = Time.now
+
+      @move_step = @step / MOVES_PER_STEP
+      @last_move_step_time = Time.now
     end
 
     def update
@@ -57,6 +62,7 @@ module Tetris
           if @last_filled > 4
             @last_filled -= 4
             @step /= 1.2
+            @move_step /= 1.2
           end
         end
 
@@ -75,17 +81,33 @@ module Tetris
           @cur_shape.position.x = 6
           @cur_shape.position.y = -4
         end
-      else
-        if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft
+
+      elsif @move_step < time - @last_move_step_time
+        @last_move_step_time = time
+
+        pressed = if @last_button
+          lambda { |id| @last_button == id }
+        else
+          lambda { |id| button_down? id }
+        end
+
+        if pressed[Gosu::KbLeft] or pressed[Gosu::GpLeft]
           @cur_shape.left
-        elsif button_down? Gosu::KbRight or button_down? Gosu::GpRight
+        elsif pressed[Gosu::KbRight] or pressed[Gosu::GpRight]
           @cur_shape.right
-        elsif button_down? Gosu::KbUp or button_down? Gosu::GpUp
+        elsif @last_button == Gosu::KbUp or @last_button == Gosu::GpUp
           @cur_shape.rotate
-        elsif button_down? Gosu::KbDown or button_down? Gosu::GpDown
+        elsif pressed[Gosu::KbDown] or pressed[Gosu::GpDown]
           @cur_shape.down
         end
+
+        @last_button = nil
+
       end
+    end
+
+    def button_down id
+      @last_button = id
     end
 
     def draw
