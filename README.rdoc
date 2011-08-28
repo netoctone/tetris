@@ -1,6 +1,10 @@
+== About
+
+  Yet another tetris implementation. Now in pure ruby 1.9 using gosu.
+
 == Installation
 
-1. clone repo and cd to it
+1. clone repo and cd into it
 
   git clone git://github.com/netoctone/tetris.git; cd tetris
 
@@ -12,6 +16,6 @@
 
   bunlde install
 
-4. enjoy the game
+4. enjoy the game (fix she-bang if needed)
 
   bin/tetris
