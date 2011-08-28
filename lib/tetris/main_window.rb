@@ -13,8 +13,6 @@ module Tetris
 
     CAPTION = 'Tetris'
 
-    COLORS = [ :red, :green, :blue, :yellow, :cyan ]
-
     MOVES_PER_STEP = 9.0
 
     include Shapes
@@ -24,6 +22,8 @@ module Tetris
       self.caption = CAPTION
 
       @brick_space = BrickSpace.new(H_BLOCK_NUM, V_BLOCK_NUM)
+
+      @colors = [ :red, :green, :blue, :yellow, :cyan ]
 
       position = ShapePosition.new @brick_space, -4, 6
       @shapes = [
@@ -36,8 +36,9 @@ module Tetris
         shape.position = position
         shape
       end
+
       @cur_shape = @shapes.pick!
-      @cur_shape.color = COLORS[rand COLORS.size]
+      @cur_shape.color = @colors.pick!
 
       @last_filled = 0
       @cur_filled = nil
@@ -74,10 +75,11 @@ module Tetris
           @cur_filled = @brick_space.paint_filled :white
 
           new_shape = @shapes.pick!
+          new_shape.color = @colors.pick!
+          @colors << @cur_shape.color
           @shapes << @cur_shape
           @cur_shape = new_shape
 
-          @cur_shape.color = COLORS[rand COLORS.size]
           @cur_shape.position.x = 6
           @cur_shape.position.y = -4
         end
