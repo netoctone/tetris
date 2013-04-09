@@ -25,51 +25,17 @@ module Tetris
 
       @timer = Timer.new
       @timer.on_fall do
-        # @completed - one or many completed rows
-        if @completed && @completed.size
-          @brick_space.delete @completed
-          @level_manager.add_score(@completed.size)
-          @completed = nil
-        end
+        relese_completed_rows
 
         # if shape cannot move
         unless @cur_shape.down
-          # make shape points static (migrate points to @brick_space)
-          @cur_shape.points.each do |p|
-            close if p[0] < 0
-            @brick_space.brick_matrix[p[0]][p[1]] = @cur_shape.color
-          end
-
-          # paint just completed row(s) with white and remember it
-          @completed = @brick_space.paint_filled :white
-
-          # get new shape
-          @cur_shape = @shape_store.pick
-
-          # place new shape on top of screen
-          @cur_shape.position ||= @position
-          @position.reset!
+          stop_current_shape
+          start_new_shape
         end
       end
 
       @timer.on_move do
-        pressed = if @last_button
-          lambda { |id| @last_button == id }
-        else
-          lambda { |id| button_down? id }
-        end
-
-        if pressed[Gosu::KbLeft] or pressed[Gosu::GpLeft]
-          @cur_shape.left
-        elsif pressed[Gosu::KbRight] or pressed[Gosu::GpRight]
-          @cur_shape.right
-        elsif @last_button == Gosu::KbUp or @last_button == Gosu::GpUp
-          @cur_shape.rotate
-        elsif pressed[Gosu::KbDown] or pressed[Gosu::GpDown]
-          @cur_shape.down
-        end
-
-        @last_button = nil
+        apply_user_action
       end
     end
 
@@ -83,18 +49,73 @@ module Tetris
 
     def draw
       @drawer.prepare
+      draw_brick_space
+      draw_shape
+    end
 
-      # draw brick space
+    private
+
+    def draw_brick_space
       @drawer.draw(Drawer::H_BLOCK_NUM, Drawer::V_BLOCK_NUM) do |canvas|
         @brick_space.brick_matrix.each_with_index do |row, y|
           row.each_with_index { |color, x| canvas.(x, y, color) if color }
         end
       end
+    end
 
-      # draw shape
+    def draw_shape
       @drawer.draw(5, 5, offset: @cur_shape.position.to_a) do |canvas|
         @cur_shape.raw_points.each { |y, x| canvas.(x, y, @cur_shape.color) }
       end
+    end
+
+    def stop_current_shape
+      # make shape points static (migrate points to @brick_space)
+      @cur_shape.points.each do |p|
+        close if p[0] < 0
+        @brick_space.brick_matrix[p[0]][p[1]] = @cur_shape.color
+      end
+
+      # paint just completed row(s) with white and remember it
+      @completed = @brick_space.paint_filled :white
+    end
+
+    def start_new_shape
+      # get new shape
+      @cur_shape = @shape_store.pick
+
+      # place new shape on top of screen
+      @cur_shape.position ||= @position
+      @position.reset!
+    end
+
+    def relese_completed_rows
+      # @completed - one or many completed rows
+      if @completed && @completed.size
+        @brick_space.delete @completed
+        @level_manager.add_score(@completed.size)
+        @completed = nil
+      end
+    end
+
+    def apply_user_action
+      pressed = if @last_button
+        lambda { |id| @last_button == id }
+      else
+        lambda { |id| button_down? id }
+      end
+
+      if pressed[Gosu::KbLeft] or pressed[Gosu::GpLeft]
+        @cur_shape.left
+      elsif pressed[Gosu::KbRight] or pressed[Gosu::GpRight]
+        @cur_shape.right
+      elsif @last_button == Gosu::KbUp or @last_button == Gosu::GpUp
+        @cur_shape.rotate
+      elsif pressed[Gosu::KbDown] or pressed[Gosu::GpDown]
+        @cur_shape.down
+      end
+
+      @last_button = nil
     end
   end
 
