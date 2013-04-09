@@ -2,37 +2,37 @@ module Tetris::Shapes
 
   class PipeLeft < FullRotateShape
     self.raw_points = [
-      [0, 0], [0, 1],
-      nil   , [1, 1],
-      nil   , [2, 1]
+      [1, 1], [1, 2],
+      nil   , [2, 2],
+      nil   , [3, 2]
     ].compact
 
     self.rotate_limits = [
-      nil   , nil   , [0, 2],
-      [1, 0], nil   , [1, 2],
-      [2, 0], nil   , nil
+      nil   , nil   , [1, 3],
+      [2, 1], nil   , [2, 3],
+      [3, 1], nil   , nil
     ].compact
 
     self.right_limits = [
-      [0, 2],
-      [1, 2],
-      [2, 2]
+      [1, 3],
+      [2, 3],
+      [3, 3]
     ].compact
 
     self.left_limits = [
-      [0,-1], nil,
-      nil   , [1, 0],
-      nil   , [2, 0]
+      [1, 0], nil,
+      nil   , [2, 1],
+      nil   , [3, 1]
     ].compact
 
     self.up_limits = [
-      [-1, 0], [-1,1]
+      [0, 1], [0, 2]
     ].compact
 
     self.down_limits = [
-      [1, 0], nil   ,
+      [2, 1], nil   ,
       nil   , nil   ,
-      nil   , [3, 1]
+      nil   , [4, 2]
     ].compact
   end
 

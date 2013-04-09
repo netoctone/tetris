@@ -5,8 +5,8 @@ require 'tetris/ruby_extensions'
 require 'tetris/brick_space'
 require 'tetris/shape_position'
 require 'tetris/shapes'
+require 'tetris/drawer'
 
-require 'texplay'
 require 'tetris/main_window'
 
 module Tetris

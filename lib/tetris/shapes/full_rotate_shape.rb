@@ -1,6 +1,6 @@
 module Tetris::Shapes
 
-  # points are to rotate around [1, 1]
+  # points are to rotate around [2, 2]
   class FullRotateShape < Shape
 
     class << self
@@ -45,7 +45,8 @@ module Tetris::Shapes
       end
 
       def rotate_point pt
-        [ pt[1], 2 - pt[0] ]
+        # points are rotating around [2, 2]
+        [ pt[1], 4 - pt[0] ]
       end
 
     end

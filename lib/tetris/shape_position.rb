@@ -4,7 +4,15 @@ module Tetris
   class ShapePosition
 
     def initialize brick_space, top_y, left_x
-      @space, @y, @x = brick_space, top_y, left_x
+      @x = @init_x = left_x
+      @y = @init_y = top_y
+      @space = brick_space
+    end
+
+    # reset to initial state
+    def reset!
+      @x = @init_x
+      @y = @init_y
     end
 
     attr_accessor :y, :x
@@ -30,6 +38,10 @@ module Tetris
     # returns new y
     def down
       @y += 1
+    end
+
+    def to_a
+      [@x, @y]
     end
 
   end

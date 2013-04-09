@@ -8,6 +8,8 @@ require 'tetris/shapes/snake_s'
 require 'tetris/shapes/snake_mirror_s'
 require 'tetris/shapes/line'
 
+require 'tetris/shapes/store'
+
 module Tetris
 
   module Shapes

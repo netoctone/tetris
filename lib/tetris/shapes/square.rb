@@ -3,8 +3,8 @@ module Tetris::Shapes
   class Square < Shape
 
     RAW_POINTS = [
-      [0, 0], [0, 1],
-      [1, 0], [1, 1]
+      [1, 1], [1, 2],
+      [2, 1], [2, 2]
     ]
 
     def raw_points
@@ -24,9 +24,9 @@ module Tetris::Shapes
     end
 
     LIMITS = {
-      :right => [ [0,  2], [1,  2] ],
-      :left =>  [ [0, -1], [1, -1] ],
-      :down =>  [ [2,  0], [2,  1] ]
+      :right => [ [1,  3], [2,  3] ],
+      :left =>  [ [1,  0], [2,  0] ],
+      :down =>  [ [3,  1], [3,  2] ]
     }
 
     def move direct
