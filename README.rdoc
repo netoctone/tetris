@@ -4,18 +4,20 @@
 
 == Installation
 
-1. clone repo and cd into it
+*   clone repo and cd into it
 
-  git clone git://github.com/netoctone/tetris.git; cd tetris
+      git clone git://github.com/netoctone/tetris.git; cd tetris
 
-2. install bundler (if you haven't yet)
+*   run through Gosu {Getting Started on %your system%}[https://github.com/jlnr/gosu/wiki]
 
-  gem install bundler
+*   install bundler (if you haven't yet)
 
-3. install dependency gems
+      gem install bundler
 
-  bunlde install
+*   install dependency gems
 
-4. enjoy the game (fix she-bang if needed)
+      bundle install
 
-  bin/tetris
+*   enjoy the game (fix she-bang if needed)
+
+      bin/tetris

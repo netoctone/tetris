@@ -1,13 +1,13 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    gosu (0.7.33)
-    texplay (0.3.5)
+    gosu (0.7.47.1)
+    texplay (0.4.3)
       gosu (>= 0.7.25)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  gosu (= 0.7.33)
-  texplay (~> 0.3.5)
+  gosu (~> 0.7.47)
+  texplay (~> 0.4.3)
