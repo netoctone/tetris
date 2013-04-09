@@ -5,10 +5,6 @@ module Tetris
 
     CAPTION = 'Tetris'
 
-    MOVES_PER_STEP = 9.0
-
-    include Shapes
-
     def initialize
       super Drawer::WIDTH, Drawer::HEIGHT, false, UPDATE_INTERVAL
       self.caption = CAPTION
@@ -22,48 +18,41 @@ module Tetris
       @position = ShapePosition.new(@brick_space, -4, 6)
       @cur_shape.position = @position
 
-      @last_filled = 0
-      @cur_filled = nil
+      @level_manager = LevelManager.new do
+        # speed up on level up
+        @timer.reduce_periods!
+      end
 
-      @step = 0.5
-      @last_step_time = Time.now
-
-      @move_step = @step / MOVES_PER_STEP
-      @last_move_step_time = Time.now
-    end
-
-    def update
-      time = Time.now
-      if @step < time - @last_step_time
-        @last_step_time = time
-
-        if @cur_filled
-          @brick_space.delete @cur_filled
-          @last_filled += @cur_filled.size
-          @cur_filled = nil
-
-          if @last_filled > 4
-            @last_filled -= 4
-            @step /= 1.2
-            @move_step /= 1.2
-          end
+      @timer = Timer.new
+      @timer.on_fall do
+        # @completed - one or many completed rows
+        if @completed && @completed.size
+          @brick_space.delete @completed
+          @level_manager.add_score(@completed.size)
+          @completed = nil
         end
 
+        # if shape cannot move
         unless @cur_shape.down
+          # make shape points static (migrate points to @brick_space)
           @cur_shape.points.each do |p|
             close if p[0] < 0
             @brick_space.brick_matrix[p[0]][p[1]] = @cur_shape.color
           end
-          @cur_filled = @brick_space.paint_filled :white
 
+          # paint just completed row(s) with white and remember it
+          @completed = @brick_space.paint_filled :white
+
+          # get new shape
           @cur_shape = @shape_store.pick
+
+          # place new shape on top of screen
           @cur_shape.position ||= @position
           @position.reset!
         end
+      end
 
-      elsif @move_step < time - @last_move_step_time
-        @last_move_step_time = time
-
+      @timer.on_move do
         pressed = if @last_button
           lambda { |id| @last_button == id }
         else
@@ -81,8 +70,11 @@ module Tetris
         end
 
         @last_button = nil
-
       end
+    end
+
+    def update
+      @timer.tick
     end
 
     def button_down id
@@ -91,11 +83,15 @@ module Tetris
 
     def draw
       @drawer.prepare
+
+      # draw brick space
       @drawer.draw(Drawer::H_BLOCK_NUM, Drawer::V_BLOCK_NUM) do |canvas|
         @brick_space.brick_matrix.each_with_index do |row, y|
           row.each_with_index { |color, x| canvas.(x, y, color) if color }
         end
       end
+
+      # draw shape
       @drawer.draw(5, 5, offset: @cur_shape.position.to_a) do |canvas|
         @cur_shape.raw_points.each { |y, x| canvas.(x, y, @cur_shape.color) }
       end
