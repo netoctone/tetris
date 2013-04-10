@@ -1,6 +1,6 @@
 == About
 
-  Yet another tetris implementation. Now in pure ruby 1.9 using gosu.
+Yet another tetris implementation. Now in pure ruby 1.9 using gosu.
 
 == Installation
 
@@ -21,3 +21,11 @@
 *   enjoy the game (fix she-bang if needed)
 
       bin/tetris
+
+== Code Status
+
+{<img src="https://codeclimate.com/github/netoctone/tetris.png" />}[https://codeclimate.com/github/netoctone/tetris]
+
+== License
+
+Released under the MIT license.
